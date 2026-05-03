@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Behavior Diagrams | Apple Pro Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b071a;
+            --bg-gradient: radial-gradient(circle at top right, #2c1b4d 0%, #0b071a 50%, #000000 100%);
+            --text: #ffffff;
+            --text-dim: #b8aeca;
+            --accent: #bf5af2;
+            --apple-gradient: linear-gradient(180deg, #ffffff 0%, #a28bc8 100%);
+            --transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            background-color: var(--bg);
+            background-image: var(--bg-gradient);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Viewport & Slide System */
+        .presentation {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 10%;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.08);
+            filter: blur(15px);
+            transition: all var(--transition);
+            z-index: 1;
+        }
+
+        .slide > * {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            filter: blur(0);
+            z-index: 2;
+        }
+
+        /* Typography */
+        .gradient-title {
+            background: var(--apple-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+        }
+
+        h1.massive { font-size: 90px; text-align: center; margin-bottom: 20px; }
+        h2.section-head { font-size: 52px; text-align: center; width: 100%; margin-bottom: 40px; }
+        .sub-text { font-size: 28px; color: var(--text-dim); font-weight: 400; max-width: 800px; text-align: center; margin: 0 auto; }
+
+        /* Components */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; align-items: center; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; width: 100%; align-items: stretch; }
+        
+        .image-box {
+            border-radius: 32px;
+            overflow: hidden;
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            width: 100%;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .image-box-small {
+            height: 150px;
+            width: 150px;
+            margin: 0 auto 30px auto;
+            border-radius: 24px;
+        }
+
+        .card {
+            background: rgba(28, 28, 30, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sdlc-flow {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: relative;
+            padding: 40px 0;
+        }
+        .sdlc-step { text-align: center; position: relative; z-index: 2; flex: 1;}
+        .circle { width: 24px; height: 24px; border-radius: 50%; background: #333; margin: 0 auto 15px; transition: 0.5s; }
+        .circle.active { background: var(--accent); box-shadow: 0 0 20px var(--accent); }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 20px; color: var(--text); border-bottom: 1px solid var(--accent); font-size: 20px; font-weight: 700; }
+        td { padding: 20px; color: var(--text-dim); border-bottom: 1px solid #222; font-size: 18px; }
+
+        /* Utilities */
+        .footnote { font-size: 12px; color: var(--text-dim); margin-top: 15px; text-align: center; width: 100%; opacity: 0.7;}
+        .word-cloud { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-top: 40px; }
+        .word-cloud span { padding: 12px 24px; border-radius: 30px; background: rgba(255,255,255,0.05); font-weight: 500; font-size: 22px; transition: transform 0.3s; }
+        .word-cloud span:hover { transform: scale(1.1); }
+        .word-cloud span.highlight { background: rgba(191, 90, 242, 0.15); color: var(--text); font-size: 28px; border: 1px solid var(--accent); font-weight: 700;}
+        .ul-styled { list-style: none; font-size: 22px; color: var(--text-dim); line-height: 1.8; }
+        .ul-styled li { margin-bottom: 15px; }
+        .ul-styled i { color: var(--accent); width: 30px; text-align: center; margin-right: 10px; }
+
+        /* Navigation Dots */
+        .nav-dots {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: 0.3s; cursor: pointer; }
+        .dot.active { background: var(--text); transform: scale(1.4); }
+    </style>
+</head>
+<body>
+
+<div class="nav-dots" id="dots"></div>
+
+<div class="presentation" id="deck">
+    
+    <section class="slide active">
+        <div class="image-box image-box-small">
+            <p style="color: var(--text-dim); text-align: center; font-size: 12px;">[ESPACIO PARA IMAGEN: Logo de UML]</p>
+        </div>
+        <h1 class="gradient-title massive">Diagramas de<br>Comportamiento UML</h1>
+        
+        <p class="sub-text" style="margin-top: 10px; font-size: 24px;">Universidad Central de Venezuela</p>
+        <p style="color: var(--text-dim); font-size: 18px; margin-top: 15px; text-align: center; opacity: 0.8; font-weight: 400;">
+            Profesor: Marcel Castro &nbsp;|&nbsp; Mayo 2026
+        </p>
+
+        <div style="margin-top: 50px; font-size: 20px; color: var(--text-dim); text-align: center; font-weight: 500;">
+            Edgar Domador • Sergio Zambrano • Rafael Rodríguez
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Agenda</h2>
+        <div class="grid-4" style="margin-top: 40px;">
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 32px; color: var(--accent); margin-bottom: 20px;"><i class="fa-solid fa-book-open"></i></p>
+                <h3 style="font-size: 20px; margin-bottom: 10px;">Parte 1</h3>
+                <p style="color: var(--text-dim); font-size: 16px;">Introducción al Modelado</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 32px; color: var(--accent); margin-bottom: 20px;"><i class="fa-solid fa-users-gear"></i></p>
+                <h3 style="font-size: 20px; margin-bottom: 10px;">Parte 2</h3>
+                <p style="color: var(--text-dim); font-size: 16px;">Casos de Uso</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 32px; color: var(--accent); margin-bottom: 20px;"><i class="fa-solid fa-arrows-turn-right"></i></p>
+                <h3 style="font-size: 20px; margin-bottom: 10px;">Parte 3</h3>
+                <p style="color: var(--text-dim); font-size: 16px;">Diagramas de Interacción</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <p style="font-size: 32px; color: var(--accent); margin-bottom: 20px;"><i class="fa-solid fa-microchip"></i></p>
+                <h3 style="font-size: 20px; margin-bottom: 10px;">Parte 4</h3>
+                <p style="color: var(--text-dim); font-size: 16px;">Dinámica y Cierre</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Modelado ≠ Diagrama</h2>
+        <div class="grid-2" style="margin-bottom: 40px;">
+            <div class="card" style="text-align: center;">
+                <h3 style="font-size: 28px; margin-bottom: 10px; color: var(--accent);">El Modelo</h3>
+                <p style="color: var(--text-dim); font-size: 18px;">La abstracción semántica. La esencia del sistema.</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="font-size: 28px; margin-bottom: 10px; color: var(--accent);">El Diagrama</h3>
+                <p style="color: var(--text-dim); font-size: 18px;">La representación gráfica de ese modelo.</p>
+            </div>
+        </div>
+        <div class="word-cloud">
+            <span>Describir</span>
+            <span class="highlight">Planificar</span>
+            <span>Requerimientos</span>
+            <span class="highlight">Análisis</span>
+            <span>Organizar</span>
+            <span class="highlight">Abstracción</span>
+            <span>Complejidad</span>
+            <span>Sistema</span>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">El Comportamiento en el SDLC</h2>
+        <div class="grid-2">
+            <div>
+                <p class="sub-text" style="text-align: left; margin-bottom: 30px; font-size: 24px;">Anticiparse antes de la primera línea de código.</p>
+                <div class="sdlc-flow" style="flex-direction: column; gap: 20px; padding: 0;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="circle active" style="margin: 0;"></div>
+                        <p style="color: var(--text); font-size: 20px; font-weight: 600;">Planificación y Análisis <span style="color: var(--accent);">(Foco UML)</span></p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="circle" style="margin: 0; background: #333;"></div>
+                        <p style="color: var(--text-dim); font-size: 20px;">Diseño y Desarrollo</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="circle" style="margin: 0; background: #333;"></div>
+                        <p style="color: var(--text-dim); font-size: 20px;">Pruebas y Mantenimiento</p>
+                    </div>
+                </div>
+            </div>
+            <div class="image-box">
+                <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Diagrama de Edgar sobre SDLC/Fases]</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Casos de Uso: La Perspectiva Externa</h2>
+        <div class="grid-2">
+            <div>
+                <ul class="ul-styled">
+                    <li><i class="fa-solid fa-crosshairs"></i> <strong>Especificar contexto:</strong> Límites del sistema.</li>
+                    <li><i class="fa-solid fa-list-check"></i> <strong>Capturar requisitos:</strong> Qué debe hacer, no cómo.</li>
+                    <li><i class="fa-solid fa-sitemap"></i> <strong>Validar arquitectura:</strong> Base para el diseño.</li>
+                    <li><i class="fa-solid fa-vial-virus"></i> <strong>Impulsar testing:</strong> Escenarios de prueba base.</li>
+                </ul>
+                <div style="display: flex; gap: 15px; margin-top: 30px;">
+                    <div class="card" style="padding: 20px; flex: 1;">
+                        <p style="color: var(--accent); font-weight: 700; font-size: 18px;">&lt;&lt;include&gt;&gt;</p>
+                        <p style="color: var(--text-dim); font-size: 14px; margin-top: 5px;">Dependencia obligatoria.</p>
+                    </div>
+                    <div class="card" style="padding: 20px; flex: 1;">
+                        <p style="color: var(--accent); font-weight: 700; font-size: 18px;">&lt;&lt;extend&gt;&gt;</p>
+                        <p style="color: var(--text-dim); font-size: 14px; margin-top: 5px;">Ruta opcional o condicional.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="image-box">
+                <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Diagrama de Edgar sobre Casos de Uso]</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Práctica: Máquina de Boletos</h2>
+        <p class="sub-text" style="margin-bottom: 40px;">Modelando interacciones seguras y preestablecidas del actor con el sistema.</p>
+        <div class="image-box" style="height: 550px;">
+            <p style="color: var(--text-dim); text-align: center; font-size: 20px;">[ESPACIO PARA IMAGEN: Diagrama de Edgar sobre la Máquina de Boletos]</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Diagramas de Interacción</h2>
+        <div class="card" style="text-align: center; max-width: 900px; margin: 0 auto 40px auto; padding: 50px;">
+            <p style="font-size: 36px; font-weight: 600; margin-bottom: 20px;">Emisión y Recepción</p>
+            <p style="color: var(--text-dim); font-size: 22px;">Concordar el diseño detallando el protocolo de mensajes de los participantes en un caso de uso.</p>
+        </div>
+        <div class="grid-2">
+            <div style="text-align: right; padding-right: 30px;">
+                <p style="font-size: 20px; color: #ff453a; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> Ambigüedad Pre-UML 2.0</p>
+                <p style="color: var(--text-dim); font-size: 16px; margin-top: 10px;">Libertades de interpretación que generaban dudas.</p>
+            </div>
+            <div style="border-left: 1px solid rgba(255,255,255,0.2); padding-left: 30px;">
+                <p style="font-size: 20px; color: #32d74b; font-weight: 600;"><i class="fa-solid fa-check-double"></i> Estándar Actual</p>
+                <p style="color: var(--text-dim); font-size: 16px; margin-top: 10px;">Sintaxis estricta y clara introducida por OMG.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Estructura Técnica de Interacción</h2>
+        <div class="grid-2">
+            <div>
+                <ul class="ul-styled">
+                    <li><i class="fa-solid fa-ruler-vertical"></i> <strong>Líneas de Vida:</strong> Existencia del objeto en el tiempo.</li>
+                    <li><i class="fa-solid fa-battery-half"></i> <strong>Activaciones:</strong> Duración de la ejecución.</li>
+                    <li><i class="fa-solid fa-envelope-open-text"></i> <strong>Mensajes:</strong> Síncronos (esperan) y Asíncronos (no esperan).</li>
+                    <li><i class="fa-solid fa-code"></i> <strong>Fragmentos:</strong> Lógica booleana en el diagrama (Alt, Loop, Opt, Break, Ref).</li>
+                </ul>
+            </div>
+            <div class="image-box">
+                <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Figura 17.14 CombinedFragment]</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Orden vs. Enlaces Dinámicos</h2>
+        <div class="grid-2" style="align-items: start;">
+            <div style="text-align: center;">
+                <p style="font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 20px;">Secuencia (Flujo Temporal)</p>
+                <div class="image-box" style="height: 350px;">
+                    <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Diagrama ATM Microsoft]</p>
+                </div>
+                <p class="footnote">Nota. Diagrama de secuencia... Microsoft, 2026</p>
+            </div>
+            <div style="text-align: center;">
+                <p style="font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 20px;">Comunicación (Red Física)</p>
+                <div class="image-box" style="height: 350px;">
+                    <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Diagrama Login Lucidchart]</p>
+                </div>
+                <p class="footnote">Nota. Diagrama de comunicación... Lucidchart, 2026</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Diagramas de Tiempo</h2>
+        <p class="sub-text" style="margin-bottom: 40px; font-size: 22px;">Líneas de vida horizontales, mensajes precisos y restricciones temporales críticas.</p>
+        <div class="grid-2" style="align-items: start;">
+            <div>
+                <div class="image-box" style="height: 350px;">
+                    <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Figura 17.30 OMG]</p>
+                </div>
+            </div>
+            <div>
+                <div class="image-box" style="height: 350px;">
+                    <p style="color: var(--text-dim); text-align: center;">[ESPACIO PARA IMAGEN: Datapath RISC-V]</p>
+                </div>
+            </div>
+        </div>
+        <p class="footnote" style="margin-top: 20px;">Nota. Datapath RISC-V adaptado de CS 61C, Universidad de California, Berkeley.</p>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Diagramas de Actividad</h2>
+        <div class="card" style="width: 100%; border-left: 8px solid var(--accent); margin-bottom: 40px;">
+            <p style="font-size: 24px; color: var(--text-dim);">Modelado de la lógica de negocio, flujo de control basado en <span style="color: #fff; font-weight: 700;">Tokens</span> y ejecución paralela.</p>
+        </div>
+        <div class="grid-2">
+            <div class="card" style="text-align: center; padding: 30px;">
+                <p style="font-size: 40px; color: var(--accent); margin-bottom: 15px;"><i class="fa-solid fa-code-branch"></i></p>
+                <h3 style="font-size: 24px; margin-bottom: 10px;">Nodo Fork</h3>
+                <p style="color: var(--text-dim);">Bifurcación que divide un flujo en múltiples hilos concurrentes.</p>
+            </div>
+            <div class="card" style="text-align: center; padding: 30px;">
+                <p style="font-size: 40px; color: var(--accent); margin-bottom: 15px;"><i class="fa-solid fa-arrows-down-to-line"></i></p>
+                <h3 style="font-size: 24px; margin-bottom: 10px;">Nodo Join</h3>
+                <p style="color: var(--text-dim);">Unión que sincroniza procesos paralelos antes de continuar.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="grid-2">
+            <div class="image-box">
+                <p style="color: var(--text-dim); text-align: center;">[PONER AQUÍ IMAGEN DE ANEXO F: DIAGRAMA DE ACTIVIDAD]</p>
+            </div>
+            <div class="card">
+                <p style="font-size: 22px; color: var(--accent); margin-bottom: 15px;">Orquestación Paralela</p>
+                <p style="color: var(--text-dim); line-height: 1.6;">Ejecución paralela para eliminar latencia. Un hilo verifica la pasarela de pago y el otro la base de datos geoespacial.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Máquinas de Estado</h2>
+        <div class="grid-2">
+            <div>
+                <p style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">Sistemas Reactivos</p>
+                <ul class="ul-styled">
+                    <li><i class="fa-solid fa-rotate"></i> <strong>Ciclo de Vida:</strong> Cambios de comportamiento del objeto.</li>
+                    <li><i class="fa-solid fa-bolt"></i> <strong>Eventos (Triggers):</strong> Estímulos que causan transición.</li>
+                    <li><i class="fa-solid fa-lock"></i> <strong>Condiciones de Guarda:</strong> Restricciones lógicas [Ej: Saldo > 0].</li>
+                    <li><i class="fa-solid fa-box-archive"></i> <strong>Superestados:</strong> Ocultar detalles para evitar la "explosión de estados".</li>
+                </ul>
+            </div>
+            <div style="text-align: center; font-size: 180px; color: var(--accent); opacity: 0.8;">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="grid-2">
+            <div class="image-box">
+                <p style="color: var(--text-dim); text-align: center;">[PONER AQUÍ IMAGEN DE ANEXO G: MÁQUINA DE ESTADOS]</p>
+            </div>
+            <div class="card">
+                <p style="font-size: 20px; margin-bottom: 10px;">Disponible ➔ En Ruta ➔ Mantenimiento</p>
+                <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+                <p style="color: #ff3b30; font-weight: 700;">Lógica de Seguridad:</p>
+                <p style="color: var(--text-dim);">Si combustible es igual a 0, se bloquea la transición a "En Ruta".</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Matriz de Decisión</h2>
+        <div class="card" style="width: 100%; padding: 0; overflow: hidden;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Diagrama</th>
+                        <th>Qué Resuelve</th>
+                        <th>Cuándo utilizar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color: var(--accent); font-weight: 600;">Casos de Uso</td>
+                        <td>Define qué debe hacer el sistema desde la perspectiva del usuario.</td>
+                        <td>Fase de requerimientos, alcance inicial con stakeholders.</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--accent); font-weight: 600;">Secuencia</td>
+                        <td>Orden cronológico estricto de mensajes entre objetos.</td>
+                        <td>Diseño de la lógica temporal de un caso de uso específico.</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--accent); font-weight: 600;">Actividad</td>
+                        <td>Flujo de control, procesos de negocio y concurrencia.</td>
+                        <td>Diseño de algoritmos complejos y operaciones multihilo.</td>
+                    </tr>
+                    <tr>
+                        <td style="color: var(--accent); font-weight: 600;">Estados</td>
+                        <td>Ciclo de vida reactivo ante eventos externos.</td>
+                        <td>Objetos críticos con estados muy definidos (Facturas, Sesiones).</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h1 class="gradient-title massive" style="font-size: 80px; line-height: 1.1;">"El diseño es lo que hace<br>que el sistema sobreviva."</h1>
+        <p class="sub-text" style="margin-top: 30px;">Una base sólida en UML trasciende el código, garantizando un software mantenible, escalable y robusto para el futuro.</p>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Declaración de Metodología</h2>
+        <div class="card" style="max-width: 900px; margin: 0 auto;">
+            <p style="font-size: 22px; color: var(--text-dim); line-height: 1.8; text-align: justify;">
+                Durante la elaboración de este trabajo y presentación se emplearon herramientas de inteligencia artificial 
+                únicamente como apoyo para la <strong>planificación, estructuración del formato y sugerencias de diseño</strong>.
+                <br><br>
+                El análisis técnico, la selección de fuentes académicas, la redacción del contenido y la construcción de los 
+                diagramas fueron realizados de forma <strong>íntegramente humana</strong> por el equipo, asegurando la 
+                comprensión y trazabilidad absoluta de los conceptos expuestos.
+            </p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <h2 class="gradient-title section-head">Referencias</h2>
+        <div class="card" style="max-width: 1000px; margin: 0 auto; padding: 50px;">
+            <ul style="list-style: none; font-size: 16px; color: var(--text-dim); line-height: 2.2;">
+                <li>• <strong>CS 61C.</strong> (s.f.). <em>Datapath RISC-V</em>. Universidad de California, Berkeley.</li>
+                <li>• <strong>Fowler, M.</strong> (2003). <em>UML Distilled: A Brief Guide to the Standard Object Modeling Language</em> (3ra ed.). Addison-Wesley.</li>
+                <li>• <strong>IBM.</strong> (s.f.). <em>Software Development Life Cycle (SDLC)</em>.</li>
+                <li>• <strong>Larman, C.</strong> (2004). <em>Applying UML and Patterns: An Introduction to Object-Oriented Analysis and Design</em> (3ra ed.). Prentice Hall.</li>
+                <li>• <strong>Lucidchart.</strong> (2026). <em>Diagrama de Comunicación</em>.</li>
+                <li>• <strong>Microsoft.</strong> (2026). <em>Diagrama de Secuencia ATM</em>.</li>
+                <li>• <strong>Object Management Group [OMG].</strong> (2017). <em>OMG Unified Modeling Language, Version 2.5.1</em>.</li>
+                <li>• <strong>Sommerville, I.</strong> (2015). <em>Software Engineering</em> (10th ed.). Pearson.</li>
+                <li>• <strong>Universidad San Marcos.</strong> (2020). <em>Ingeniería de Sistemas</em>.</li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const dotsContainer = document.getElementById('dots');
+
+    // Create Navigation Dots
+    slides.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+            currentSlide = i;
+            updatePresentation();
+        });
+        dotsContainer.appendChild(dot);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    function updatePresentation() {
+        slides.forEach((slide, index) => {
+            slide.classList.toggle('active', index === currentSlide);
+            dots[index].classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updatePresentation();
+            }
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updatePresentation();
+            }
+        }
+    });
+
+    // Touch Support
+    let touchStartX = 0;
+    window.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+    window.addEventListener('touchend', e => {
+        let touchEndX = e.changedTouches[0].clientX;
+        if (touchStartX - touchEndX > 50) { // Swipe Left (Next)
+            if (currentSlide < totalSlides - 1) { currentSlide++; updatePresentation(); }
+        } else if (touchEndX - touchStartX > 50) { // Swipe Right (Prev)
+            if (currentSlide > 0) { currentSlide--; updatePresentation(); }
+        }
+    });
+</script>
+
+</body>
+</html>
