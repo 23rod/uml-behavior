@@ -27,8 +27,10 @@
             color: var(--text);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            height: 100dvh; /* El 'dvh' soluciona el bug de altura al recargar la barra del navegador */
+            width: 100%;    /* El '%' evita el margen negro lateral del 'vw' */
+            margin: 0;
+            padding: 0;
         }
 
         /* Ambient Animated Lights for Liquid Glass Refraction */
@@ -199,6 +201,7 @@
         .dot.active { background: var(--text); transform: scale(1.4); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
         @media (max-width: 1024px) {
+            .ambient-light { display: none !important; }
             h1.massive { font-size: 55px; }
             h2.section-head { font-size: 36px; margin-bottom: 20px; }
             .grid-2 { gap: 30px; }
